@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using my_books.Data;
+using my_books.Services;
 
 namespace my_books
 {
@@ -35,6 +36,7 @@ namespace my_books
 
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(_connectionString));
 
+            services.AddTransient<IBooksService, BooksService>();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "my_books", Version = "v1"}); });
         }
 
@@ -55,7 +57,7 @@ namespace my_books
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            
+
             AppDbInitialization.Seed(app);
         }
     }
