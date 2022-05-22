@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace my_books.Data.Model
 {
@@ -18,5 +19,7 @@ namespace my_books.Data.Model
 
         public int PublisherId { get; set; }
         public Publisher Publisher { get; set; }
+
+        public List<Book_Author> BookAuthor { get; set; }
     }
 }
