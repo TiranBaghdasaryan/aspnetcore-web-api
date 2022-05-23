@@ -7,12 +7,9 @@ namespace my_books.Services
     public interface IBooksService
     {
         public void AddBookWithAuthors(BookVM book);
-        public IEnumerable<Book> GetAllBooks();
+        public IEnumerable<BookWithAuthorsVM> GetAllBooks();
         public BookWithAuthorsVM GetBookById(int bookId);
-        public Book UpdateBookById(int bookId,BookVM book);
-
+        public Book UpdateBookById(int bookId, BookVM book);
         public void DeleteBookById(int bookId);
-
-
     }
 }

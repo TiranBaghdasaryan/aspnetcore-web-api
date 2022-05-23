@@ -6,5 +6,6 @@ namespace my_books.Services
     {
         public void AddAuthor(AuthorVM author);
         public AuthorWithBooksVM GetAuthorWithBooks(int bookId);
+        public void DeleteAuthorById(int authorId);
     }
 }

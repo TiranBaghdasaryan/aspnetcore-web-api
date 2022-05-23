@@ -21,8 +21,6 @@ namespace my_books.Data
                         {
                             Title = "First Book Title",
                             Description = "First Book Description",
-                            IsRead = true,
-                            DateRead = DateTime.Now.AddDays(-10),
                             Rate = 4,
                             Genre = "Horror",
                             CoverUrl = "url1",
@@ -32,8 +30,6 @@ namespace my_books.Data
                         {
                             Title = "Second Book Title",
                             Description = "Second Book Description",
-                            IsRead = true,
-                            DateRead = DateTime.Now.AddDays(-10),
                             Rate = 4,
                             Genre = "Fantastic",
                             CoverUrl = "url2",

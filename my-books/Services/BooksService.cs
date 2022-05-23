@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using my_books.Data;
 using my_books.Data.Model;
@@ -23,9 +22,7 @@ namespace my_books.Services
             {
                 Title = book.Title,
                 Description = book.Description,
-                IsRead = book.IsRead,
-                DateRead = book.IsRead ? book.DateRead : null,
-                Rate = book.IsRead ? book.Rate : null,
+                Rate = book.Rate,
                 Genre = book.Genre,
                 CoverUrl = book.CoverUrl,
                 DateAdded = DateTime.Now,
@@ -48,7 +45,27 @@ namespace my_books.Services
             _context.SaveChanges();
         }
 
-        public IEnumerable<Book> GetAllBooks() => _context.Books;
+        public IEnumerable<BookWithAuthorsVM> GetAllBooks()
+        {
+            IEnumerable<BookWithAuthorsVM> result =
+                (from book in _context.Books
+                    select new BookWithAuthorsVM()
+                    {
+                        Title = book.Title,
+                        Description = book.Description,
+                        Rate = book.Rate,
+                        Genre = book.Genre,
+                        CoverUrl = book.CoverUrl,
+                        PublisherName = book.Publisher.Name,
+                        AuthorNames = (
+                                from bookAuthor in book.BookAuthor
+                                select bookAuthor.Author.Name
+                            )
+                            .ToList()
+                    });
+
+            return result;
+        }
 
         public BookWithAuthorsVM GetBookById(int bookId)
         {
@@ -78,9 +95,7 @@ namespace my_books.Services
                     {
                         Title = book.Title,
                         Description = book.Description,
-                        IsRead = book.IsRead,
-                        DateRead = book.IsRead ? book.DateRead : null,
-                        Rate = book.IsRead ? book.Rate : null,
+                        Rate = book.Rate,
                         Genre = book.Genre,
                         CoverUrl = book.CoverUrl,
                         PublisherName = book.Publisher.Name,
@@ -92,12 +107,7 @@ namespace my_books.Services
                     })
                 .FirstOrDefault();
 
-
             return result;
-            
-            
-            
-            
         }
 
         public Book UpdateBookById(int bookId, BookVM book)
@@ -107,13 +117,13 @@ namespace my_books.Services
             {
                 _book.Title = book.Title;
                 _book.Description = book.Description;
-                _book.IsRead = book.IsRead;
-                _book.DateRead = book.IsRead ? book.DateRead : null;
-                _book.Rate = book.IsRead ? book.Rate : null;
+                _book.Rate = book.Rate;
                 _book.Genre = book.Genre;
                 _book.CoverUrl = book.CoverUrl;
+                _book.PublisherId = book.PublisherId;
             }
 
+            //_context.BookAuthor.Select(ba =>Equals(ba.BookId,bookId))
             _context.SaveChanges();
 
             return _book;

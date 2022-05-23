@@ -6,5 +6,6 @@ namespace my_books.Services
     {
         public void AddPublisher(PublisherVM publisher);
         public PublisherWithBooksVM GetPublisherWithBooksById(int id);
+        public void DeletePublisherById(int id);
     }
 }

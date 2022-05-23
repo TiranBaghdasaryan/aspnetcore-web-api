@@ -28,5 +28,12 @@ namespace my_books.Controllers
             AuthorWithBooksVM result = _authorsService.GetAuthorWithBooks(id);
             return Ok(result);
         }
+
+        [HttpDelete("delete-author/{id}")]
+        public IActionResult DeleteAuthorById(int id)
+        {
+            _authorsService.DeleteAuthorById(id);
+            return Ok();
+        }
     }
 }

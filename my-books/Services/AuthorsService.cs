@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using my_books.Data;
 using my_books.Data.Model;
 using my_books.Data.ViewModels;
@@ -38,9 +40,7 @@ namespace my_books.Services
                         {
                             Title = book.Title,
                             Description = book.Description,
-                            IsRead = book.IsRead,
-                            DateRead = book.IsRead ? book.DateRead : null,
-                            Rate = book.IsRead ? book.Rate : null,
+                            Rate = book.Rate,
                             Genre = book.Genre,
                             CoverUrl = book.CoverUrl,
                             PublisherName = book.Publisher.Name,
@@ -54,6 +54,19 @@ namespace my_books.Services
                 })
                 .FirstOrDefault();
             return result;
+        }
+
+        public void DeleteAuthorById(int authorId)
+        {
+            Author author = _context.Authors.FirstOrDefault(a => Equals(a.Id, authorId));
+
+            if (!Equals(author, null))
+            {
+                _context.Authors.Remove(author);
+              
+
+                _context.SaveChanges();
+            }
         }
     }
 }

@@ -27,7 +27,7 @@ namespace my_books.Services
 
         public PublisherWithBooksVM GetPublisherWithBooksById(int id)
         {
-            var result = _context.Publishers.Where(p => Equals(p.Id, id))
+            PublisherWithBooksVM result = _context.Publishers.Where(p => Equals(p.Id, id))
                 .Select(p => new PublisherWithBooksVM()
                 {
                     Name = p.Name,
@@ -35,9 +35,7 @@ namespace my_books.Services
                         {
                             Title = book.Title,
                             Description = book.Description,
-                            IsRead = book.IsRead,
-                            DateRead = book.IsRead ? book.DateRead : null,
-                            Rate = book.IsRead ? book.Rate : null,
+                            Rate = book.Rate,
                             Genre = book.Genre,
                             CoverUrl = book.CoverUrl,
                             PublisherName = book.Publisher.Name,
@@ -52,6 +50,17 @@ namespace my_books.Services
                 .FirstOrDefault();
 
             return result;
+        }
+
+        public void DeletePublisherById(int id)
+        {
+            Publisher publisher = _context.Publishers.FirstOrDefault(p => Equals(p.Id, id));
+
+            if (!Equals(publisher, null))
+            {
+                _context.Publishers.Remove(publisher);
+                _context.SaveChanges();
+            }
         }
     }
 }

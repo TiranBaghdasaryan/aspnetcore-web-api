@@ -27,7 +27,7 @@ namespace my_books.Controllers
         [HttpGet("get-all-books")]
         public IActionResult GetAllBooks()
         {
-            IEnumerable<Book> books = _booksService.GetAllBooks();
+            IEnumerable<BookWithAuthorsVM> books = _booksService.GetAllBooks();
             return Ok(books);
         }
 
@@ -42,6 +42,8 @@ namespace my_books.Controllers
         public IActionResult UpdateBookById(int id, [FromBody] BookVM book)
         {
             Book updatedBook = _booksService.UpdateBookById(id, book);
+            
+            
             return Ok(book);
         }
 
