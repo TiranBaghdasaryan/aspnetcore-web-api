@@ -25,7 +25,6 @@ namespace my_books.Data
                             DateRead = DateTime.Now.AddDays(-10),
                             Rate = 4,
                             Genre = "Horror",
-                            Author = "First Author",
                             CoverUrl = "url1",
                             DateAdded = DateTime.Now
                         },
@@ -37,7 +36,6 @@ namespace my_books.Data
                             DateRead = DateTime.Now.AddDays(-10),
                             Rate = 4,
                             Genre = "Fantastic",
-                            Author = "Second Author",
                             CoverUrl = "url2",
                             DateAdded = DateTime.Now
                         });
