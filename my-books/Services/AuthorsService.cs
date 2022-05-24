@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using my_books.Data;
@@ -63,7 +64,25 @@ namespace my_books.Services
             if (!Equals(author, null))
             {
                 _context.Authors.Remove(author);
-              
+
+                _context.SaveChanges();
+                List<Book> RemovedBooks = new List<Book>();
+ 
+                int[] bookIdsInPivot = _context.BookAuthor.Select(ba => ba.BookId).ToArray();
+
+                int[] bookIds = _context.Books.Select(b => b.Id).ToArray();
+
+                for (int i = 0; i < bookIds.Length; i++)
+                {
+                    if (!bookIdsInPivot.Contains(bookIds[i]))
+                    {
+                        var book = _context.Books.Single(b => Equals(b.Id, bookIds[i]));
+                        if (!Equals(book, null))
+                            RemovedBooks.Add(book);
+                    }
+                }
+
+                _context.Books.RemoveRange(RemovedBooks);
 
                 _context.SaveChanges();
             }
