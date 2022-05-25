@@ -1,4 +1,6 @@
-﻿using my_books.Data.ViewModels;
+﻿using System.Collections.Generic;
+using my_books.Data.Model;
+using my_books.Data.ViewModels;
 
 namespace my_books.Services
 {

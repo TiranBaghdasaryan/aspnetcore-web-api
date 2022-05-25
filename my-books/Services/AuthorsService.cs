@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.Data.SqlClient;
 using my_books.Data;
 using my_books.Data.Model;
 using my_books.Data.ViewModels;
@@ -63,28 +62,59 @@ namespace my_books.Services
 
             if (!Equals(author, null))
             {
-                _context.Authors.Remove(author);
+                // _context.Authors.Remove(author);
+                //
+                // _context.SaveChanges();
+                // List<Book> RemovedBooks = new List<Book>();
+                //
+                // int[] bookIdsInPivot = _context.BookAuthor.Select(ba => ba.BookId).ToArray();
+                //
+                // int[] bookIds = _context.Books.Select(b => b.Id).ToArray();
+                //
+                // for (int i = 0; i < bookIds.Length; i++)
+                // {
+                //     if (!bookIdsInPivot.Contains(bookIds[i]))
+                //     {
+                //         var book = _context.Books.Single(b => Equals(b.Id, bookIds[i]));
+                //         if (!Equals(book, null))
+                //             RemovedBooks.Add(book);
+                //     }
+                // }
+                //
+                // _context.Books.RemoveRange(RemovedBooks);
+                //
+                // _context.SaveChanges();
 
-                _context.SaveChanges();
-                List<Book> RemovedBooks = new List<Book>();
- 
-                int[] bookIdsInPivot = _context.BookAuthor.Select(ba => ba.BookId).ToArray();
+                string connectionString = "Server=localhost;Database=books-db;Integrated Security=true;";
 
-                int[] bookIds = _context.Books.Select(b => b.Id).ToArray();
+                // Provide the query string with a parameter placeholder.
+                string queryString =
+                    "DELETE FROM dbo.Books WHERE Id IN(SELECT BookId From BookAuthor WHERE BookId In(SELECT BookId FROM BookAuthor WHERE BookAuthor.AuthorId = @authorId) GROUP BY BookId Having Count(AuthorId) = 1) DELETE FROM Authors WHERE Id = @authorId";
 
-                for (int i = 0; i < bookIds.Length; i++)
+
+                using (SqlConnection connection =
+                    new SqlConnection(connectionString))
                 {
-                    if (!bookIdsInPivot.Contains(bookIds[i]))
+                    // Create the Command and Parameter objects.
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    command.Parameters.AddWithValue("@authorId", authorId);
+
+                    // Open the connection in a try/catch block.
+                    // Create and execute the DataReader, writing the result
+                    // set to the console window.
+                    try
                     {
-                        var book = _context.Books.Single(b => Equals(b.Id, bookIds[i]));
-                        if (!Equals(book, null))
-                            RemovedBooks.Add(book);
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+                     
+                        reader.Close();
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    // Console.ReadLine();
                 }
-
-                _context.Books.RemoveRange(RemovedBooks);
-
-                _context.SaveChanges();
             }
         }
     }
