@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using my_books.Data;
 using my_books.Data.Model;
 using my_books.Data.ViewModels;
@@ -10,10 +11,12 @@ namespace my_books.Services
     public class AuthorsService : IAuthorsService
     {
         private readonly AppDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public AuthorsService(AppDbContext context)
+        public AuthorsService(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public void AddAuthor(AuthorVM author)
@@ -85,7 +88,7 @@ namespace my_books.Services
                 //
                 // _context.SaveChanges();
 
-                string connectionString = "Server=localhost;Database=books-db;Integrated Security=true;";
+                string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
                 // Provide the query string with a parameter placeholder.
                 string queryString =
@@ -106,7 +109,7 @@ namespace my_books.Services
                     {
                         connection.Open();
                         SqlDataReader reader = command.ExecuteReader();
-                     
+
                         reader.Close();
                     }
                     catch (Exception ex)
