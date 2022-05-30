@@ -92,7 +92,7 @@ namespace my_books.Services
 
                 // Provide the query string with a parameter placeholder.
                 string queryString =
-                    "DELETE FROM dbo.Books WHERE Id IN(SELECT BookId From BookAuthor WHERE BookId In(SELECT BookId FROM BookAuthor WHERE BookAuthor.AuthorId = @authorId) GROUP BY BookId Having Count(AuthorId) = 1) DELETE FROM Authors WHERE Id = @authorId";
+                    "DELETE FROM Books WHERE Id IN(SELECT BookId From BookAuthor WHERE BookId In(SELECT BookId FROM BookAuthor  WHERE BookAuthor.AuthorId = authorId) GROUP BY BookId Having Count(AuthorId) = 1) DELETE FROM Authors WHERE Id = @authorId";
 
 
                 using (SqlConnection connection =
